@@ -13,7 +13,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 public class MapUtil {
+	
+	static Logger log = LogManager.getLogger("de.tudarmstadt.lt.util");
+	
 	public static Map<String, String> readMapFromReader(BufferedReader reader, String delimiter) throws IOException {
 		Map<String, String> map = new HashMap<String, String>();
 		String line;
@@ -22,7 +28,7 @@ public class MapUtil {
 			if (parts.length == 2) {
 				map.put(parts[0], parts[1]);
 			} else {
-				System.err.println("MapUtil.readMapFromFile: column count != 2: " + line);
+				log.warn("MapUtil.readMapFromFile: column count != 2: " + line);
 			}
 		}
 		
