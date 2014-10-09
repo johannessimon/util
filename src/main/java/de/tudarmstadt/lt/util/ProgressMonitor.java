@@ -21,7 +21,7 @@ public class ProgressMonitor {
 	public void reportProgress(long part) {
 		double progress = (double)part / (double)total;
 		if (progress - lastProgress >= reportProgressAfter) {
-			System.out.printf("[%s] Processed %.1f%%\n", name, progress * 100.0);
+			log.info(String.format("[%s] Processed %.1f%%\n", name, progress * 100.0));
 			// round progress off to closest multiple of reportProgressAfter
 			lastProgress = (int)(progress / reportProgressAfter) * reportProgressAfter;
 		}
