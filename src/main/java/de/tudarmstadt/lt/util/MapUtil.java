@@ -14,27 +14,30 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class MapUtil {
-	public static Map<String, String> readMapFromFile(String fileName, String delimiter) throws IOException {
+	public static Map<String, String> readMapFromReader(BufferedReader reader, String delimiter) throws IOException {
 		Map<String, String> map = new HashMap<String, String>();
-		BufferedReader reader = new BufferedReader(new MonitoredFileReader(fileName));
-		
 		String line;
 		while ((line = reader.readLine()) != null) {
 			String[] parts = line.split(delimiter);
 			if (parts.length == 2) {
 				map.put(parts[0], parts[1]);
 			} else {
-				System.err.println("MapHelper.readMapFromFile: column count != 2: " + line);
+				System.err.println("MapUtil.readMapFromFile: column count != 2: " + line);
 			}
 		}
 		
 		reader.close();
 		return map;
 	}
-
-	public static Set<String> readSetFromFile(String fileName) throws IOException {
-		Set<String> set = new HashSet<String>();
+	
+	public static Map<String, String> readMapFromFile(String fileName, String delimiter) throws IOException {
 		BufferedReader reader = new BufferedReader(new MonitoredFileReader(fileName));
+		
+		return readMapFromReader(reader, delimiter);
+	}
+
+	public static Set<String> readSetFromReader(BufferedReader reader) throws IOException {
+		Set<String> set = new HashSet<String>();
 		
 		String line;
 		while ((line = reader.readLine()) != null) {
@@ -44,6 +47,13 @@ public class MapUtil {
 		reader.close();
 		return set;
 	}
+
+	public static Set<String> readSetFromFile(String fileName) throws IOException {
+		BufferedReader reader = new BufferedReader(new MonitoredFileReader(fileName));
+		
+		return MapUtil.readSetFromReader(reader);
+	}
+		
 	
 	public static <K, V extends Comparable<V>> Map<K, V> sortMapByValue(Map<K, V> map) {
 		ValueComparator<K, V> vc = new ValueComparator<K, V>(map);
