@@ -9,29 +9,35 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.input.CountingInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MonitoredFileReader extends Reader {
 	private CountingInputStream countingIn;
 	private Reader inReader;
-	private File file;
 	private ProgressMonitor monitor;
 	
-	public MonitoredFileReader(String fileName, String encoding, double reportProgressAfter) throws IOException {
-		file = new File(fileName);
-		InputStream in = countingIn = new CountingInputStream(new FileInputStream(file));
+	Logger log = LogManager.getLogger("de.tudarmstadt.lt.util");
+	
+	public MonitoredFileReader(String fileName, InputStream is, long length, String encoding, double reportProgressAfter) throws IOException {
+		InputStream in = countingIn = new CountingInputStream(is);
 		if (fileName.endsWith(".gz")) {
 			try {
 				@SuppressWarnings("resource")
 				InputStream gzIn = new GZIPInputStream(in);
-				System.out.println("[" + file.getName() + "] GZipped file detected. Reading using decompressor.");
+				log.info("[" + fileName + "] GZipped file detected. Reading using decompressor.");
 				in = gzIn;
 			} catch (ZipException e) {
 				// proceed like nothing happened (gzIn has not been assigned to in)
-				System.err.println("[" + file.getName() + "] Warning: Unsuccessfully tried top uncompress file ending with .gz, reading file without decompression.");
+				log.error("[" + fileName + "] Warning: Unsuccessfully tried top uncompress file ending with .gz, reading file without decompression.", e);
 			}
 		}
 		inReader = new InputStreamReader(in, encoding);
-		monitor = new ProgressMonitor(file.getName(), "bytes", file.length(), reportProgressAfter);
+		monitor = new ProgressMonitor(fileName, "bytes", length, reportProgressAfter);
+	}
+	
+	public MonitoredFileReader(String fileName, String encoding, double reportProgressAfter) throws IOException {
+		this(fileName, new FileInputStream(new File(fileName)), new File(fileName).length(), encoding, reportProgressAfter);
 	}
 	
 	public MonitoredFileReader(String fileName, String encoding) throws IOException {

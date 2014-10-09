@@ -1,16 +1,21 @@
 package de.tudarmstadt.lt.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ProgressMonitor {
 	long total;
 	double reportProgressAfter;
 	double lastProgress = 0.0;
 	String name;
 	
+	Logger log = LogManager.getLogger("de.tudarmstadt.lt.util");
+	
 	public ProgressMonitor(String name, String units, long total, double reportProgressAfter) {
 		this.total = total;
 		this.name = name;
 		this.reportProgressAfter = reportProgressAfter;
-		System.out.println("[" + name + "] Starting to process... (" + total + " " + units + " total)");
+		log.info("[" + name + "] Starting to process... (" + total + " " + units + " total)");
 	}
 	
 	public void reportProgress(long part) {
