@@ -9,8 +9,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipException;
 
 import org.apache.commons.io.input.CountingInputStream;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 public class MonitoredFileReader extends Reader {
 	private CountingInputStream countingIn;
