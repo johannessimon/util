@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -66,6 +69,13 @@ public class MapUtil {
 		Map<K, V> sortedMap = new TreeMap<K, V>(vc);
 		sortedMap.putAll(map);
 		return sortedMap;
+	}
+	
+	public static <K, V extends Comparable<V>> List<K> sortMapKeysByValue(Map<K, V> map) {
+		ValueComparator<K, V> vc = new ValueComparator<K, V>(map);
+		List<K> sortedKeys = new LinkedList<K>(map.keySet());
+		Collections.sort(sortedKeys, vc);
+		return sortedKeys;
 	}
 	
 	static class ValueComparator<K, V extends Comparable<V>> implements Comparator<K> {
