@@ -65,7 +65,7 @@ public class MapUtil {
 		
 	
 	public static <K, V extends Comparable<V>> Map<K, V> sortMapByValue(Map<K, V> map) {
-		ValueComparator<K, V> vc = new ValueComparator<K, V>(map);
+		ValueComparatorNoEquals<K, V> vc = new ValueComparatorNoEquals<K, V>(map);
 		Map<K, V> sortedMap = new TreeMap<K, V>(vc);
 		sortedMap.putAll(map);
 		return sortedMap;
@@ -78,9 +78,9 @@ public class MapUtil {
 		return sortedKeys;
 	}
 	
-	static class ValueComparator<K, V extends Comparable<V>> implements Comparator<K> {
+	static class ValueComparatorNoEquals<K, V extends Comparable<V>> implements Comparator<K> {
 	    Map<K, V> base;
-	    public ValueComparator(Map<K, V> base) {
+	    public ValueComparatorNoEquals(Map<K, V> base) {
 	        this.base = base;
 	    }
 
@@ -91,6 +91,18 @@ public class MapUtil {
 	        } else {
 	            return 1;
 	        } // returning 0 would merge keys
+	    }
+	}
+	
+	static class ValueComparator<K, V extends Comparable<V>> implements Comparator<K> {
+	    Map<K, V> base;
+	    public ValueComparator(Map<K, V> base) {
+	        this.base = base;
+	    }
+
+	    // Note: this comparator imposes orderings that are inconsistent with equals.    
+	    public int compare(K a, K b) {
+	        return -base.get(a).compareTo(base.get(b));
 	    }
 	}
 	
