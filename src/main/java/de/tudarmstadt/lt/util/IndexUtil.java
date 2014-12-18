@@ -17,6 +17,25 @@ public class IndexUtil {
 		public B getIndex(A a);
 	}
 	
+	public static class GenericIndex<T> implements Index<T, Integer> {
+		Map<Integer, T> index = new HashMap<Integer, T>();
+		Map<T, Integer> rIndex = new HashMap<T, Integer>();
+		
+		public T get(Integer i) {
+			return index.get(i);
+		}
+		
+		public Integer getIndex(T str) {
+			Integer i = rIndex.get(str);
+			if (i == null) {
+				i = rIndex.size();
+				rIndex.put(str, i);
+				index.put(i, str);
+			}
+			return i;
+		}
+	}
+	
 	public static class StringIndex implements Index<String, Integer> {
 		Map<Integer, String> index = new HashMap<Integer, String>();
 		Map<String, Integer> rIndex = new HashMap<String, Integer>();
